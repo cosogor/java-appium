@@ -23,35 +23,42 @@ public class AppiumTest {
     public static void main (String[] args){
         try {
             openTesingApp();
-        } catch (MalformedURLException e) {
+        } catch (InterruptedException e) {
             System.out.println(e.getCause());
             System.out.println(e.getMessage());
             e.printStackTrace();
         }
     }
-    public static void openTesingApp() throws MalformedURLException {
+    public static void openTesingApp() throws InterruptedException {
         DesiredCapabilities cap = new DesiredCapabilities();
         // adb -s emulator-5554 shell getprop
-        cap.setCapability("deviceName","Redmi 9C NFC");
-        cap.setCapability("udid","NBAAB6V4TOVCT4OR");
+        cap.setCapability("deviceName","Redmi 3S");
+        cap.setCapability("udid","28e3019c7d53");
         cap.setCapability("platformName","Android");
-        cap.setCapability("platformVersion","10");
-        cap.setCapability("appPackage","com.miui.calculator");
-        cap.setCapability("appActivity","com.miui.calculator.cal.CalculatorActivity");
-        URL url = new URL("http://127.0.0.1:4723/wd/hub");
-        driver = new AppiumDriver<>(url, cap);
+        cap.setCapability("platformVersion","6.0.1");
+        cap.setCapability("appPackage","com.google.android.calculator");
+        cap.setCapability("appActivity","com.android.calculator2.Calculator");
+        try {
+            URL url = new URL("http://127.0.0.1:4723/wd/hub");
+            driver = new AppiumDriver<>(url, cap);
+        } catch (MalformedURLException e) {
+            System.out.println(e.getCause());
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
         System.out.println("TestApplication started.");
-        MobileElement one = driver.findElement(By.id("com.miui.calculator:digit1"));
-        MobileElement two = driver.findElement(By.id("com.miui.calculator:digit2"));
-        MobileElement plus = driver.findElement(By.id("com.miui.calculator:plus"));
-        MobileElement equal = driver.findElement(By.id("com.miui.calculator:equal"));
-        MobileElement result = driver.findElement(By.className("android.widget.EditText"));
+        MobileElement one = driver.findElement(By.id("com.google.android.calculator:id/digit_1"));
+        MobileElement two = driver.findElement(By.id("com.google.android.calculator:id/digit_2"));
+        MobileElement plus = driver.findElement(By.id("com.google.android.calculator:id/op_add"));
+        MobileElement equal = driver.findElement(By.id("com.google.android.calculator:id/eq"));
         one.click();
         plus.click();
         two.click();
         equal.click();
+//        Thread.sleep(1000);
+        MobileElement result = driver.findElement(By.className("android.widget.TextView"));
         String res = result.getText();
         System.out.println("\n result is " + res);
-        Assert.assertNotEquals(res, "5");
+        Assert.assertEquals(res, "3");
     }
 }
